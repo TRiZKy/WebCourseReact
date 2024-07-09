@@ -62,16 +62,6 @@
 
 
 
-      document.addEventListener("DOMContentLoaded", function () {
-        // Check if dark mode is enabled on the system
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          // dark mode is enabled, update your HTML or body class
-          document.documentElement.classList.add('dark')
-          document.body.classList.add('dark')
-          console.log('dark mode is enabled')
-        }
-      })
-
       // send custom style to parent
       if (typeof mtwAppConfig !== 'undefined' && mtwAppConfig) {
         window.parent.postMessage({ type: 'myApp', action: 'customConfig', config: mtwAppConfig }, '*')
