@@ -5,17 +5,18 @@ import DarkModeToggleComponent from './DarkModeToggle';
 import './BurgerMenu.css';
 
 const BurgerMenu = () => {
-    return (
-        <Menu right>
-            <Link to="/" className="menu-item">Home</Link>
-            <Link to="/dashboard" className="menu-item">Dashboard</Link>
-            <Link to="/analytics" className="menu-item">Analytics</Link>
-            <Link to="/sensors" className="menu-item">Sensors</Link>
-            <div className="menu-item">
-                <DarkModeToggleComponent />
-            </div>
-        </Menu>
-    );
+  return (
+    <Menu right>
+      <Link to="/" className="menu-item">Home</Link>
+      <Link to="/" className="menu-item">Dashboard</Link>
+      <Link to="/analytics" className="menu-item">Analytics</Link>
+      <Link to="/sensors" className="menu-item">Sensors</Link>
+      <Link to="/crops" className="menu-item">Crops</Link>
+      <div className="menu-item">
+        <DarkModeToggleComponent />
+      </div>
+    </Menu>
+  );
 };
 
 export default BurgerMenu;

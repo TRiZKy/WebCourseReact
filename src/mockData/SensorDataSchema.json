@@ -1,0 +1,11 @@
+{
+  "sensorId": "string",
+  "type": "string",
+  "location": "string",
+  "data": [
+    {
+      "timestamp": "ISO 8601 date",
+      "value": "number"
+    }
+  ]
+}

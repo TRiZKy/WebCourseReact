@@ -10,3 +10,7 @@ body {
 .navbar {
     @apply bg-green-600 dark:bg-gray-800;
 }
+/* Add this if not already included */
+html, body, #root, .min-h-screen {
+  height: 100%;
+}

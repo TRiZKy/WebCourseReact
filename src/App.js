@@ -1,24 +1,41 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
 import Sensors from './pages/Sensors';
-import MainLayout from './layouts/MainLayout';
+import CropManagement from './pages/CropManagement';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import PrivateRoute from './components/PrivateRoute';
+import { AuthProvider } from './context/AuthContext';
+import Home from "./pages/Home";
 
 function App() {
-    return (
-        <Router>
-            <MainLayout>
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/analytics" element={<Analytics />} />
-                    <Route path="/sensors" element={<Sensors />} />
-                </Routes>
-            </MainLayout>
-        </Router>
-    );
+  return (
+    <Router>
+      <AuthProvider>
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          <div className="flex-grow">
+            <Routes>
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
+              <Route element={<PrivateRoute />}>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/sensors" element={<Sensors />} />
+                <Route path="/crops" element={<CropManagement />} />
+              </Route>
+            </Routes>
+          </div>
+          <Footer />
+        </div>
+      </AuthProvider>
+    </Router>
+  );
 }
 
 export default App;
