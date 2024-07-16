@@ -3,7 +3,20 @@ import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import useDarkMode from '../hooks/useDarkMode';
+import moment from 'moment';
 
+const CustomTooltip = ({ active, payload, label, isDarkMode }) => {
+  if (active && payload && payload.length) {
+    return (
+        <div className={`p-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white border-gray-500' : 'bg-white text-black border-black'}`}>
+          <p className="label">{`Time: ${moment(label).format('LLL')}`}</p>
+          <p className="intro">{`Value: ${payload[0].value.toFixed(1)}`}</p>
+        </div>
+    );
+  }
+
+  return null;
+};
 const SensorCard = ({ title, data, type }) => {
   const isDarkMode = useDarkMode();
   const axisStrokeColor = isDarkMode ? '#ffffff' : '#000000';
@@ -14,10 +27,14 @@ const SensorCard = ({ title, data, type }) => {
         return (
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-              <XAxis dataKey="name" stroke={axisStrokeColor} />
+              <XAxis
+                  dataKey="time"
+                  stroke={axisStrokeColor}
+                  tickFormatter={(tick) => moment(tick).format('LT')} // Format the date
+              />
               <YAxis stroke={axisStrokeColor} />
               <CartesianGrid strokeDasharray="3 3" />
-              <Tooltip />
+              <Tooltip content={<CustomTooltip isDarkMode={isDarkMode} />} />
               <Legend />
               <Line type="monotone" dataKey="value" stroke="#8884d8" />
             </LineChart>
@@ -27,10 +44,14 @@ const SensorCard = ({ title, data, type }) => {
         return (
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-              <XAxis dataKey="name" stroke={axisStrokeColor} />
+              <XAxis
+                  dataKey="time"
+                  stroke={axisStrokeColor}
+                  tickFormatter={(tick) => moment(tick).format('LT')} // Format the date
+              />
               <YAxis stroke={axisStrokeColor} />
               <CartesianGrid strokeDasharray="3 3" />
-              <Tooltip />
+              <Tooltip content={<CustomTooltip isDarkMode={isDarkMode} />} />
               <Legend />
               <Bar dataKey="value" fill="#8884d8" />
             </BarChart>
@@ -45,7 +66,7 @@ const SensorCard = ({ title, data, type }) => {
                   data.map((entry, index) => <Cell key={`cell-${index}`} fill={['#0088FE', '#00C49F', '#FFBB28', '#FF8042'][index % 4]} />)
                 }
               </Pie>
-              <Tooltip />
+              <Tooltip content={<CustomTooltip isDarkMode={isDarkMode} />} />
               <Legend />
             </PieChart>
           </ResponsiveContainer>

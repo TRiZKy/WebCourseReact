@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Temperature Sensor",
+    "type": "temperature",
+    "location": "Field 1"
+  },
+  {
+    "name": "Humidity Sensor",
+    "type": "humidity",
+    "location": "Field 1"
+  },
+  {
+    "name": "Soil Moisture Sensor",
+    "type": "soilMoisture",
+    "location": "Field 2"
+  },
+  {
+    "name": "Light Sensor",
+    "type": "light",
+    "location": "Field 3"
+  }
+]

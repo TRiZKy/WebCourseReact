@@ -24,6 +24,7 @@ const Navbar = () => {
           <Link to="/analytics" className="text-white dark:text-gray-200">Analytics</Link>
           <Link to="/sensors" className="text-white dark:text-gray-200">Sensors</Link>
           <Link to="/crops" className="text-white dark:text-gray-200">Crops</Link>
+          <Link to="/sensor-selection" className="text-white dark:text-gray-200">Sensor Selection</Link>
           <DarkModeToggleComponent />
           {currentUser ? (
             <button onClick={handleLogout} className="text-white dark:text-gray-200">
