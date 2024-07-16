@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import sensorRoutes from './routes/api.js'; // Adjust the path as necessary
+import sensorRoutes from './routes/sensorRoutes.js'; // Adjust the path as necessary
 
 dotenv.config();
 
