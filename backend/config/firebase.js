@@ -1,13 +1,9 @@
 import admin from 'firebase-admin';
-import { createRequire } from 'module';
-import * as dotenv from 'dotenv';
-import path from 'path';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
-const require = createRequire(import.meta.url);
-const serviceAccountPath = path.resolve(process.env.GOOGLE_APPLICATION_CREDENTIALS);
-const serviceAccount = require(serviceAccountPath);
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
