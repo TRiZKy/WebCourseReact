@@ -1,28 +1,32 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import sensorRoutes from './routes/sensorRoutes.js'; // Adjust the path as necessary
+import connectDB from './config/db.js';
+import sensorRoutes from './routes/sensorRoutes.js';
+import cropRoutes from './routes/cropRoutes.js';
 
 dotenv.config();
 
+// Connect to database
+connectDB();
+
 const app = express();
 
-// Use CORS middleware
+// CORS configuration
 const corsOptions = {
     origin: process.env.FRONTEND_URL,
     optionsSuccessStatus: 200,
 };
 
+// Middleware
 app.use(cors(corsOptions));
-
-// Other middleware
 app.use(express.json());
 
 // Routes
 app.use('/api/sensors', sensorRoutes);
+app.use('/api/crops', cropRoutes);
 
-// Start the server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+const PORT = process.env.PORT || 7458;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
