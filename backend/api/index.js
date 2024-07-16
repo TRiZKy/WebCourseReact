@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import connectDB from './config/db.js';
-import sensorRoutes from './routes/sensorRoutes.js';
-import cropRoutes from './routes/cropRoutes.js';
+import connectDB from '../config/db.js';
+import sensorRoutes from '../routes/sensorRoutes.js';
+import cropRoutes from '../routes/cropRoutes.js';
 
 dotenv.config();
 
