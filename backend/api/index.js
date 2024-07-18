@@ -36,6 +36,36 @@ app.use('/api/sensors', sensorRoutes);
 app.use('/api/crops', cropRoutes);
 
 const PORT = process.env.PORT || 7458;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+});
+
+// Graceful shutdown
+const shutdown = () => {
+    console.log('Shutting down server...');
+    server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+    });
+
+    // Forcefully shut down server if it doesn't close within 10 seconds
+    setTimeout(() => {
+        console.error('Forcing server shutdown');
+        process.exit(1);
+    }, 10000);
+};
+
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught exception:', err);
+    shutdown();
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+    console.error('Unhandled promise rejection:', err);
+    shutdown();
 });
