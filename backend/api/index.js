@@ -13,8 +13,16 @@ connectDB();
 const app = express();
 
 // CORS configuration
+const allowedOrigins = [process.env.FRONTEND_URL, process.env.LOCAL_URL];
+
 const corsOptions = {
-    origin: process.env.FRONTEND_URL,
+    origin: (origin, callback) => {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     optionsSuccessStatus: 200,
     credentials: true,
 };
@@ -25,9 +33,12 @@ app.use(express.json());
 
 // Manually set CORS headers for all requests
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", process.env.FRONTEND_URL);
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    const origin = req.get('origin');
+    if (allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin);
+    }
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     next();
 });
 
