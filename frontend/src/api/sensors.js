@@ -1,6 +1,6 @@
 import { auth } from '../firebase';
 
-// const API_URL = 'http://localhost:7458/api';
+//const API_URL = 'http://localhost:7458/api';
 const API_URL = process.env.REACT_APP_API_URL;
 
 const getAuthToken = async () => {
