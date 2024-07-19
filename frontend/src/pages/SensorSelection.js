@@ -9,8 +9,6 @@ const SensorSelection = () => {
         const fetchData = async () => {
             const sensors = await fetchSensors();
             setSensors(sensors);
-            const userPreferences = await getUserPreferences();
-            setSelectedSensors(userPreferences);
         };
         fetchData();
     }, []);
