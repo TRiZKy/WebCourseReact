@@ -74,9 +74,14 @@ export const getUserPreferences = async (req, res) => {
     }
 };
 
+// Save user preferences
 export const saveUserPreferences = async (req, res) => {
     try {
-        const { userId, selectedSensors } = req.body;
+        const { selectedSensors } = req.body;
+        const userId = req.user._id; // Ensure this is correctly populated
+
+        console.log(`Saving preferences for user: ${userId}`);
+        console.log(`Selected sensors: ${selectedSensors}`);
 
         // Find the user preferences document
         let preferences = await UserPreferences.findOne({ userId });
