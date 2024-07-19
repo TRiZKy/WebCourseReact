@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { fetchSensors, saveUserPreferences, getUserPreferences } from '../api/sensors';
+import { fetchSensors, saveUserPreferences } from '../api/sensors';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons';
+import { faSave } from '@fortawesome/free-solid-svg-icons';
 
 const SensorSelection = () => {
     const [sensors, setSensors] = useState([]);
@@ -7,8 +10,8 @@ const SensorSelection = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const sensors = await fetchSensors();
-            setSensors(sensors);
+            const sensorsData = await fetchSensors();
+            setSensors(sensorsData);
         };
         fetchData();
     }, []);
@@ -28,22 +31,35 @@ const SensorSelection = () => {
 
     return (
         <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-4">Select Sensors</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <h1 className="text-3xl font-bold text-center mb-6">Select Sensors</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {sensors.map(sensor => (
-                    <div key={sensor._id} className="p-4 border rounded">
-                        <label>
+                    <div key={sensor._id} className="p-6 border rounded-lg shadow-md bg-white dark:bg-gray-800">
+                        <label className="flex items-center cursor-pointer">
                             <input
                                 type="checkbox"
                                 checked={selectedSensors.includes(sensor._id)}
                                 onChange={() => handleSelectionChange(sensor._id)}
+                                className="hidden"
                             />
-                            {sensor.name}
+                            <FontAwesomeIcon
+                                icon={selectedSensors.includes(sensor._id) ? faCheckCircle : faCircle}
+                                className={`mr-2 text-2xl ${selectedSensors.includes(sensor._id) ? 'text-blue-500' : 'text-gray-400'}`}
+                            />
+                            <span className="text-lg dark:text-gray-200">{sensor.name}</span>
                         </label>
                     </div>
                 ))}
             </div>
-            <button onClick={handleSave} className="mt-4 py-2 px-4 bg-blue-500 text-white rounded">Save Preferences</button>
+            <div className="flex justify-center mt-6">
+                <button
+                    onClick={handleSave}
+                    className="flex items-center py-3 px-6 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition-all"
+                >
+                    <FontAwesomeIcon icon={faSave} className="mr-2" />
+                    Save Preferences
+                </button>
+            </div>
         </div>
     );
 };
