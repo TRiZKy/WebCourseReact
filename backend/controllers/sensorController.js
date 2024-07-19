@@ -76,20 +76,28 @@ export const getUserPreferences = async (req, res) => {
 
 export const saveUserPreferences = async (req, res) => {
     try {
-        let preferences = await UserPreferences.findOne({ userId: req.user.uid });
+        const { userId, selectedSensors } = req.body;
+
+        // Find the user preferences document
+        let preferences = await UserPreferences.findOne({ userId });
+
         if (!preferences) {
-            preferences = new UserPreferences({ userId: req.user.uid, selectedSensors: req.body.selectedSensors });
+            // Create new preferences document if it doesn't exist
+            preferences = new UserPreferences({ userId, selectedSensors });
         } else {
-            preferences.selectedSensors = req.body.selectedSensors;
+            // Update the existing preferences document
+            preferences.selectedSensors = selectedSensors;
         }
+
+        // Save the preferences
         await preferences.save();
+
         res.status(200).json({ message: 'Preferences saved' });
     } catch (err) {
         console.error('Error saving user preferences:', err);
         res.status(500).json({ message: err.message });
     }
 };
-
 export const getSensorData = async (req, res) => {
     try {
         const { sensorIds } = req.body;
