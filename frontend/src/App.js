@@ -11,6 +11,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PrivateRoute from './components/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
+import Home from "./pages/Home";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Navbar />
             <div className="flex-grow">
               <Routes>
+                <Route path="/home" element={<Home />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
                 <Route element={<PrivateRoute />}>
