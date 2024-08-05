@@ -99,7 +99,7 @@ const Dashboard = () => {
                   <SensorCard key={sensor._id} title={sensor.name} data={sensor.readings} type="line" />
               ))
           ) : (
-              <div>No data available</div>
+              <div>Please Select Sensors To Be Shown Here</div>
           )}
         </div>
       </div>
