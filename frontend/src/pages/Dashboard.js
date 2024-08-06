@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchSensorData, getUserPreferences } from '../api/sensors';
 import SensorCard from '../components/SensorCard';
 import useDarkMode from '../hooks/useDarkMode';
+import {HashLoader} from "react-spinners";
 
 const Dashboard = () => {
   const [sensorData, setSensorData] = useState([]);
@@ -68,7 +69,11 @@ const Dashboard = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+        <div className="flex items-center justify-center h-full">
+          <HashLoader color="#0bae12" size={200} />
+        </div>
+    );
   }
 
   if (error) {

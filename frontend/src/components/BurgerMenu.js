@@ -16,7 +16,7 @@ const BurgerMenu = () => {
     };
   return (
     <Menu right>
-      <Link to="/" className="menu-item">Home</Link>
+      <Link to="/home" className="menu-item">Home</Link>
       <Link to="/" className="menu-item">Dashboard</Link>
       <Link to="/analytics" className="menu-item">Analytics</Link>
       <Link to="/sensors" className="menu-item">Sensors</Link>
