@@ -5,7 +5,7 @@ let crops = [...mockCrops];
 export const fetchCrops = async () => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve([...crops]); // Ensure immutability
+      resolve([...crops]);
     }, 500);
   });
 };
@@ -13,7 +13,7 @@ export const fetchCrops = async () => {
 export const addCrop = async (crop) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      crops = [...crops, crop]; // Ensure immutability
+      crops = [...crops, crop];
       resolve(crop);
     }, 500);
   });
@@ -24,7 +24,7 @@ export const addNote = async (cropId, note) => {
     setTimeout(() => {
       crops = crops.map(crop => {
         if (crop.id === cropId) {
-          return { ...crop, notes: [...crop.notes, note] }; // Ensure immutability
+          return { ...crop, notes: [...crop.notes, note] };
         }
         return crop;
       });
