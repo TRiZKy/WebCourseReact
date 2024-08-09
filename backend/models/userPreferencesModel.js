@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const UserPreferencesSchema = new mongoose.Schema({
-    userId: { type: String, required: true }, // Change from ObjectId to String
+    userId: { type: String, required: true },
     selectedSensors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sensor' }]
 });
 

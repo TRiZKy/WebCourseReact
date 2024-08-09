@@ -31,14 +31,9 @@ const generateMissingData = async (sensor, lastTime) => {
 
     const readings = [];
 
-    console.log(`Now: ${new Date(now).toISOString()}`);
-    console.log(`One month ago: ${new Date(oneMonthAgoEpoch).toISOString()}`);
-    console.log(`Generating data from ${new Date(currentTime).toISOString()} to ${new Date(now).toISOString()} for sensor ${sensor.name}`);
-
     // Generate data for every hour until now or up to one month ago
     while (currentTime < now && currentTime >= oneMonthAgoEpoch) {
-        currentTime += 1000 * 60 * 60; // Increment by one hour
-        console.log(`Generating data for time: ${new Date(currentTime).toISOString()}`);
+        currentTime += 1000 * 60 * 60;
         if (currentTime <= now) {
             readings.push({ time: new Date(currentTime), value: generateRandomValue(sensor.type) });
         }
@@ -51,7 +46,6 @@ const generateMissingData = async (sensor, lastTime) => {
         );
     }
 
-    console.log(`Generated ${readings.length} readings for sensor ${sensor.name}`);
 };
 
 export const getSensors = async (req, res) => {
@@ -67,7 +61,13 @@ export const getSensors = async (req, res) => {
 export const getUserPreferences = async (req, res) => {
     try {
         const preferences = await UserPreferences.findOne({ userId: req.user.uid }).populate('selectedSensors');
-        res.json(preferences ? preferences.selectedSensors : []); // Return the actual selected sensors
+
+        if (preferences ) {
+            res.json(preferences.selectedSensors);
+        } else {
+            const allSensors = await Sensor.find();
+            res.json(allSensors);
+        }
     } catch (err) {
         console.error('Error fetching user preferences:', err);
         res.status(500).json({ message: err.message });
