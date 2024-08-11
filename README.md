@@ -7,7 +7,6 @@
 - [Features](#features)
 - [Technology Stack](#technology-stack)
 - [How It Works](#how-it-works)
-- [Screenshots](#screenshots)
 - [Getting Started](#getting-started)
 - [Future Enhancements](#future-enhancements)
 
@@ -60,9 +59,6 @@ AgriPlatform is built using a modern technology stack to ensure reliability, sca
 
 6. **User Preferences**: The platform remembers your selected sensors and crops, providing a tailored experience every time you log in.
 
-## Screenshots
-
-*(Include screenshots or mockups of the platform interface here to showcase its design and functionality.)*
 
 ## Getting Started
 
