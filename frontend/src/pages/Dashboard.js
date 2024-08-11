@@ -2,8 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { fetchSensorData, getUserPreferences } from '../api/sensors';
 import SensorCard from '../components/SensorCard';
 import useDarkMode from '../hooks/useDarkMode';
-import {HashLoader} from "react-spinners";
+import { HashLoader } from "react-spinners";
 
+/**
+ * A component that displays a dashboard with sensor data visualizations.
+ * It fetches the user's preferred sensors and displays their data over a selected time range.
+ * The user can select the time range for viewing sensor data, and the data is filtered accordingly.
+ *
+ * @component
+ * @returns {JSX.Element} A React component that renders the dashboard with sensor data visualizations.
+ */
 const Dashboard = () => {
   const [sensorData, setSensorData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -34,10 +42,22 @@ const Dashboard = () => {
     setFilteredData(filterDataByTimeRange(sensorData, timeRange));
   }, [timeRange, sensorData]);
 
+  /**
+   * Handles changes to the selected time range for filtering sensor data.
+   *
+   * @param {React.ChangeEvent<HTMLSelectElement>} event - The change event from the time range select element.
+   */
   const handleTimeRangeChange = (event) => {
     setTimeRange(event.target.value);
   };
 
+  /**
+   * Filters the sensor data based on the selected time range.
+   *
+   * @param {Array<Object>} data - The array of sensor data to filter.
+   * @param {string} range - The selected time range ('6h', '12h', 'day', 'week', 'month').
+   * @returns {Array<Object>} The filtered sensor data.
+   */
   const filterDataByTimeRange = (data, range) => {
     const now = Date.now();
     let startTime;

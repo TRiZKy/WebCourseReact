@@ -1,7 +1,12 @@
 import Sensor from '../models/sensorModel.js';
 import UserPreferences from '../models/userPreferencesModel.js';
 
-// Helper function to generate random value based on sensor type
+/**
+ * Generates a random value based on the sensor type.
+ *
+ * @param {string} type - The type of sensor (e.g., 'temperature', 'humidity').
+ * @returns {number} A random value appropriate for the given sensor type.
+ */
 const generateRandomValue = (type) => {
     switch (type) {
         case 'temperature':
@@ -17,7 +22,16 @@ const generateRandomValue = (type) => {
     }
 };
 
-// Function to generate data for missing hours using epoch time
+/**
+ * Generates missing data for a sensor by creating hourly data points from the last known reading to the current time,
+ * or up to one month ago.
+ *
+ * @async
+ * @function generateMissingData
+ * @param {Object} sensor - The sensor document from the database.
+ * @param {Date} lastTime - The time of the last recorded reading.
+ * @returns {Promise<void>} A promise that resolves when the missing data has been generated and saved.
+ */
 const generateMissingData = async (sensor, lastTime) => {
     const now = Date.now();
     let currentTime = new Date(lastTime).getTime();
@@ -45,9 +59,17 @@ const generateMissingData = async (sensor, lastTime) => {
             { $push: { readings: { $each: readings } } }
         );
     }
-
 };
 
+/**
+ * Retrieves all sensors from the database.
+ *
+ * @async
+ * @function getSensors
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object used to send back the list of sensors.
+ * @returns {Promise<void>} A promise that resolves when the sensors have been successfully retrieved and sent in the response.
+ */
 export const getSensors = async (req, res) => {
     try {
         const sensors = await Sensor.find();
@@ -58,6 +80,15 @@ export const getSensors = async (req, res) => {
     }
 };
 
+/**
+ * Retrieves the user's sensor preferences or all sensors if no preferences are set.
+ *
+ * @async
+ * @function getUserPreferences
+ * @param {Object} req - The request object, containing the authenticated user's ID in `req.user.uid`.
+ * @param {Object} res - The response object used to send back the user's preferred sensors or all sensors.
+ * @returns {Promise<void>} A promise that resolves when the preferences have been successfully retrieved and sent in the response.
+ */
 export const getUserPreferences = async (req, res) => {
     try {
         const preferences = await UserPreferences.findOne({ userId: req.user.uid }).populate('selectedSensors');
@@ -74,7 +105,15 @@ export const getUserPreferences = async (req, res) => {
     }
 };
 
-// Save user preferences
+/**
+ * Saves the user's sensor preferences.
+ *
+ * @async
+ * @function saveUserPreferences
+ * @param {Object} req - The request object, containing the selected sensors in `req.body` and the authenticated user's ID in `req.user.uid`.
+ * @param {Object} res - The response object used to confirm that the preferences were saved.
+ * @returns {Promise<void>} A promise that resolves when the preferences have been successfully saved.
+ */
 export const saveUserPreferences = async (req, res) => {
     try {
         const { selectedSensors } = req.body;
@@ -96,6 +135,15 @@ export const saveUserPreferences = async (req, res) => {
     }
 };
 
+/**
+ * Retrieves sensor data, generates missing data if needed, and sends back the updated sensor data.
+ *
+ * @async
+ * @function getSensorData
+ * @param {Object} req - The request object, containing the sensor IDs in `req.body`.
+ * @param {Object} res - The response object used to send back the updated sensor data.
+ * @returns {Promise<void>} A promise that resolves when the sensor data has been successfully retrieved and sent in the response.
+ */
 export const getSensorData = async (req, res) => {
     try {
         const { sensorIds } = req.body;

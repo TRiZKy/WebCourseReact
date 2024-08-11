@@ -1,55 +1,81 @@
-import React, { useState, useRef } from 'react';
-import { addNote } from '../api/crops';
+import React, { useState } from 'react';
+import moment from 'moment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
-const CropCard = ({ crop }) => {
-    const [noteText, setNoteText] = useState('');
-    const [notes, setNotes] = useState([...crop.notes]); // Ensure immutability by spreading crop.notes
-    const isAddingNote = useRef(false);
+/**
+ * Component to display crop details and manage notes for the crop.
+ *
+ * @component
+ * @param {Object} props - The props passed to the component.
+ * @param {Object} props.crop - The crop data object containing details and notes.
+ * @param {function} props.onAddNote - Function to handle adding a new note to the crop.
+ * @param {function} props.onDeleteCrop - Function to handle deleting the crop.
+ * @returns {JSX.Element} The rendered component.
+ */
+const CropCard = ({ crop, onAddNote, onDeleteCrop }) => {
+    const [note, setNote] = useState('');
 
-    const handleAddNote = async () => {
-        if (isAddingNote.current) return;
-        if (noteText.trim()) {
-            isAddingNote.current = true;
-            const newNote = { id: `note-${notes.length + 1}`, date: new Date().toISOString().split('T')[0], text: noteText };
-            await addNote(crop.id, newNote);
-            setNotes((prevNotes) => {
-                const updatedNotes = [...prevNotes, newNote];
-                return updatedNotes;
-            });
-            setNoteText('');
-            isAddingNote.current = false;
+    const handleAddNote = () => {
+        if (!note) return;
+        onAddNote(crop._id, note);
+        setNote('');
+    };
+
+    const handleDeleteCrop = () => {
+        if (window.confirm('Are you sure you want to delete this crop?')) {
+            onDeleteCrop(crop._id);
         }
     };
 
     return (
-        <div className="max-w-sm rounded overflow-hidden shadow-lg p-4 m-4 bg-white dark:bg-gray-800">
-            <div className="font-bold text-xl mb-2 dark:text-gray-200">{crop.name}</div>
-            <p className="text-gray-700 dark:text-gray-300">Planting Date: {crop.plantingDate}</p>
-            <p className="text-gray-700 dark:text-gray-300">Growth Stage: {crop.growthStage}</p>
-            <p className="text-gray-700 dark:text-gray-300">Expected Harvest Date: {crop.expectedHarvestDate}</p>
+        <div className="p-4 border rounded-lg shadow-lg bg-white dark:bg-gray-800 dark:text-gray-100 relative">
+            <h2 className="text-xl font-semibold mb-2">{crop.name}</h2>
+            <p><strong>Planting Date:</strong> {moment(crop.plantingDate).format('LL')}</p>
+            <p><strong>Growth Stage:</strong> {crop.growthStage}</p>
+            <p><strong>Expected Harvest Date:</strong> {moment(crop.expectedHarvestDate).format('LL')}</p>
             <div className="mt-4">
-                <h3 className="font-bold dark:text-gray-200">Notes</h3>
-                <ul className="list-disc pl-5">
-                    {notes.map((note) => (
-                        <li key={note.id} className="text-gray-700 dark:text-gray-300">{note.date}: {note.text}</li>
+                <h3 className="text-lg font-semibold mb-2">Notes Timeline</h3>
+                <div className="space-y-4">
+                    {crop.notes.map((note, index) => (
+                        <div key={index} className="flex items-start space-x-4">
+                            <div className="flex-shrink-0">
+                                <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                                    {moment(note.date).format('D')}
+                                </div>
+                            </div>
+                            <div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400">
+                                    {moment(note.date).format('MMMM YYYY')}
+                                </div>
+                                <div className="text-sm text-gray-700 dark:text-gray-200">
+                                    {note.text}
+                                </div>
+                            </div>
+                        </div>
                     ))}
-                </ul>
-                <div className="mt-2">
-                    <input
-                        type="text"
-                        value={noteText}
-                        onChange={(e) => setNoteText(e.target.value)}
-                        placeholder="Add a note"
-                        className="w-full px-2 py-1 border border-gray-300 rounded-md"
-                    />
-                    <button
-                        onClick={handleAddNote}
-                        className="mt-2 w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-                    >
-                        Add Note
-                    </button>
                 </div>
             </div>
+            <div className="mt-2">
+                <textarea
+                    placeholder="Add a note"
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                />
+                <button
+                    onClick={handleAddNote}
+                    className="mt-2 py-2 px-4 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition-all"
+                >
+                    Add Note
+                </button>
+            </div>
+            <button
+                onClick={handleDeleteCrop}
+                className="absolute bottom-4 right-4 p-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition-all"
+            >
+                <FontAwesomeIcon icon={faTrashAlt} />
+            </button>
         </div>
     );
 };

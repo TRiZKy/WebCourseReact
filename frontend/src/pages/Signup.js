@@ -2,6 +2,15 @@ import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+/**
+ * A component that renders the sign-up page for the application.
+ * It allows users to enter their email, password, and password confirmation to create a new account.
+ * If the sign-up is successful, the user is navigated to the login page.
+ * If there is an error during sign-up, an error message is displayed.
+ *
+ * @component
+ * @returns {JSX.Element} A React component that renders the sign-up form.
+ */
 const Signup = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -11,6 +20,14 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  /**
+   * Handles the form submission for signing up.
+   * It validates the password and confirmation, then calls the signup function from the authentication context.
+   * If the sign-up is successful, the user is navigated to the login page.
+   *
+   * @async
+   * @param {React.FormEvent<HTMLFormElement>} e - The form submission event.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {

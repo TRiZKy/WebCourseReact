@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { fetchWeatherData } from '../api/weather';
 
+/**
+ * A component that fetches and displays the current weather information for a given location.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {number} props.latitude - The latitude of the location to fetch weather data for.
+ * @param {number} props.longitude - The longitude of the location to fetch weather data for.
+ * @returns {JSX.Element} A React component that displays the weather information, including temperature, condition, and an icon.
+ */
 const WeatherWidget = ({ latitude, longitude }) => {
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(true);

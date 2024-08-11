@@ -5,6 +5,17 @@ import {
 import useDarkMode from '../hooks/useDarkMode';
 import moment from 'moment';
 
+/**
+ * Custom tooltip component for displaying additional information when hovering over the chart.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {boolean} props.active - Whether the tooltip is active (visible).
+ * @param {Array} props.payload - The data payload associated with the tooltip.
+ * @param {string} props.label - The label for the data point (usually the x-axis value).
+ * @param {boolean} props.isDarkMode - Whether the dark mode is enabled.
+ * @returns {JSX.Element|null} A React component that renders the tooltip or null if inactive.
+ */
 const CustomTooltip = ({ active, payload, label, isDarkMode }) => {
   if (active && payload && payload.length) {
     return (
@@ -17,59 +28,77 @@ const CustomTooltip = ({ active, payload, label, isDarkMode }) => {
 
   return null;
 };
+
+/**
+ * A component that renders a sensor data card with a chart.
+ * The type of chart (line, bar, pie) is determined by the `type` prop.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {string} props.title - The title of the sensor card.
+ * @param {Array<Object>} props.data - The data to be displayed in the chart.
+ * @param {string} props.type - The type of chart to display ('line', 'bar', 'pie').
+ * @returns {JSX.Element} A React component that renders a sensor card with the specified chart.
+ */
 const SensorCard = ({ title, data, type }) => {
   const isDarkMode = useDarkMode();
   const axisStrokeColor = isDarkMode ? '#ffffff' : '#000000';
 
+  /**
+   * Renders the appropriate chart based on the `type` prop.
+   *
+   * @function
+   * @returns {JSX.Element|null} A React component that renders the chart or null if the type is invalid.
+   */
   const renderChart = () => {
     switch (type) {
       case 'line':
         return (
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-              <XAxis
-                  dataKey="time"
-                  stroke={axisStrokeColor}
-                  tickFormatter={(tick) => moment(tick).format('LT')} // Format the date
-              />
-              <YAxis stroke={axisStrokeColor} />
-              <CartesianGrid strokeDasharray="3 3" />
-              <Tooltip content={<CustomTooltip isDarkMode={isDarkMode} />} />
-              <Legend />
-              <Line type="monotone" dataKey="value" stroke="#8884d8" />
-            </LineChart>
-          </ResponsiveContainer>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                <XAxis
+                    dataKey="time"
+                    stroke={axisStrokeColor}
+                    tickFormatter={(tick) => moment(tick).format('LT')} // Format the date
+                />
+                <YAxis stroke={axisStrokeColor} />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip content={<CustomTooltip isDarkMode={isDarkMode} />} />
+                <Legend />
+                <Line type="monotone" dataKey="value" stroke="#8884d8" />
+              </LineChart>
+            </ResponsiveContainer>
         );
       case 'bar':
         return (
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-              <XAxis
-                  dataKey="time"
-                  stroke={axisStrokeColor}
-                  tickFormatter={(tick) => moment(tick).format('LT')} // Format the date
-              />
-              <YAxis stroke={axisStrokeColor} />
-              <CartesianGrid strokeDasharray="3 3" />
-              <Tooltip content={<CustomTooltip isDarkMode={isDarkMode} />} />
-              <Legend />
-              <Bar dataKey="value" fill="#8884d8" />
-            </BarChart>
-          </ResponsiveContainer>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                <XAxis
+                    dataKey="time"
+                    stroke={axisStrokeColor}
+                    tickFormatter={(tick) => moment(tick).format('LT')} // Format the date
+                />
+                <YAxis stroke={axisStrokeColor} />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip content={<CustomTooltip isDarkMode={isDarkMode} />} />
+                <Legend />
+                <Bar dataKey="value" fill="#8884d8" />
+              </BarChart>
+            </ResponsiveContainer>
         );
       case 'pie':
         return (
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={50} fill="#8884d8" label>
-                {
-                  data.map((entry, index) => <Cell key={`cell-${index}`} fill={['#0088FE', '#00C49F', '#FFBB28', '#FF8042'][index % 4]} />)
-                }
-              </Pie>
-              <Tooltip content={<CustomTooltip isDarkMode={isDarkMode} />} />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={50} fill="#8884d8" label>
+                  {
+                    data.map((entry, index) => <Cell key={`cell-${index}`} fill={['#0088FE', '#00C49F', '#FFBB28', '#FF8042'][index % 4]} />)
+                  }
+                </Pie>
+                <Tooltip content={<CustomTooltip isDarkMode={isDarkMode} />} />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
         );
       default:
         return null;
@@ -77,10 +106,10 @@ const SensorCard = ({ title, data, type }) => {
   };
 
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg p-4 m-4 bg-white dark:bg-gray-800">
-      <div className="font-bold text-xl mb-2 dark:text-gray-200">{title}</div>
-      {renderChart()}
-    </div>
+      <div className="max-w-sm rounded overflow-hidden shadow-lg p-4 m-4 bg-white dark:bg-gray-800">
+        <div className="font-bold text-xl mb-2 dark:text-gray-200">{title}</div>
+        {renderChart()}
+      </div>
   );
 };
 

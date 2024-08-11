@@ -2,10 +2,24 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+/**
+ * A component that renders the home page of the AgriPlatform application.
+ * It displays a welcome message and a "Get Started" button that navigates the user
+ * based on their authentication status.
+ *
+ * @component
+ * @returns {JSX.Element} A React component that renders the home page with a background image and a call to action.
+ */
 const Home = () => {
     const { currentUser } = useAuth();
     const navigate = useNavigate();
 
+    /**
+     * Handles the click event on the "Get Started" button.
+     * If the user is authenticated, navigates to the dashboard; otherwise, navigates to the login page.
+     *
+     * @function
+     */
     const handleGetStartedClick = () => {
         if (currentUser) {
             navigate('/');

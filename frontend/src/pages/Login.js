@@ -2,6 +2,15 @@ import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+/**
+ * A component that renders the login page for the application.
+ * It allows users to enter their email and password to log in.
+ * If the login is successful, the user is navigated to the home page.
+ * If there is an error during login, an error message is displayed.
+ *
+ * @component
+ * @returns {JSX.Element} A React component that renders the login form.
+ */
 const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -10,6 +19,14 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  /**
+   * Handles the form submission for logging in.
+   * It calls the login function from the authentication context and navigates the user
+   * based on the success or failure of the login attempt.
+   *
+   * @async
+   * @param {React.FormEvent<HTMLFormElement>} e - The form submission event.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

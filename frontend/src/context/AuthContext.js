@@ -4,10 +4,24 @@ import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndP
 
 const AuthContext = createContext();
 
+/**
+ * Custom hook to access the authentication context.
+ *
+ * @returns {Object} The current authentication context value.
+ */
 export const useAuth = () => {
   return useContext(AuthContext);
 };
 
+/**
+ * Provides authentication-related functions and user data to its child components.
+ * Manages the current user's authentication state and exposes methods for signup, login, and logout.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {React.ReactNode} props.children - The child components that will have access to the authentication context.
+ * @returns {JSX.Element} A React component that provides authentication context to its children.
+ */
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,6 +34,15 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
+  /**
+   * Creates a new user with the provided email and password.
+   *
+   * @async
+   * @param {string} email - The email address of the new user.
+   * @param {string} password - The password for the new user.
+   * @throws {Error} Throws an error with a user-friendly message if signup fails.
+   * @returns {Promise<void>}
+   */
   const signup = async (email, password) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
@@ -28,6 +51,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Signs in an existing user with the provided email and password.
+   *
+   * @async
+   * @param {string} email - The email address of the user.
+   * @param {string} password - The password of the user.
+   * @throws {Error} Throws an error with a user-friendly message if login fails.
+   * @returns {Promise<void>}
+   */
   const login = async (email, password) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -36,6 +68,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Signs out the currently authenticated user.
+   *
+   * @async
+   * @throws {Error} Throws an error with a user-friendly message if logout fails.
+   * @returns {Promise<void>}
+   */
   const logout = async () => {
     try {
       await signOut(auth);
@@ -44,6 +83,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Handles errors from Firebase authentication operations, providing user-friendly error messages.
+   *
+   * @param {Object} error - The error object from Firebase authentication.
+   * @returns {string} A user-friendly error message.
+   */
   const handleAuthError = (error) => {
     let errorMessage;
     console.log(error.code);

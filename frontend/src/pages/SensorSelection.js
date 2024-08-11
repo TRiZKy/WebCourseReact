@@ -4,6 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faCircle } from '@fortawesome/free-regular-svg-icons';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 
+/**
+ * A component that allows users to select sensors and save their preferences.
+ * The selected sensors are stored and can be saved as user preferences.
+ *
+ * @component
+ * @returns {JSX.Element} A React component that renders a sensor selection interface.
+ */
 const SensorSelection = () => {
     const [sensors, setSensors] = useState([]);
     const [selectedSensors, setSelectedSensors] = useState([]);
@@ -16,6 +23,12 @@ const SensorSelection = () => {
         fetchData();
     }, []);
 
+    /**
+     * Handles changes in sensor selection.
+     * It adds or removes a sensor from the selected sensors list.
+     *
+     * @param {string} sensorId - The ID of the sensor to be added or removed from the selection.
+     */
     const handleSelectionChange = (sensorId) => {
         if (selectedSensors.includes(sensorId)) {
             setSelectedSensors(selectedSensors.filter(id => id !== sensorId));
@@ -24,6 +37,12 @@ const SensorSelection = () => {
         }
     };
 
+    /**
+     * Handles the save action, saving the selected sensors as user preferences.
+     *
+     * @async
+     * @function
+     */
     const handleSave = async () => {
         await saveUserPreferences(selectedSensors);
         alert('Preferences saved!');

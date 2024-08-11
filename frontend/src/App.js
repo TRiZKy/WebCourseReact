@@ -13,6 +13,14 @@ import PrivateRoute from './components/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
 import Home from "./pages/Home";
 
+/**
+ * The main application component that sets up routing and provides authentication context.
+ * It includes the navigation bar, footer, and routes to different pages of the application.
+ * Protected routes are wrapped with the `PrivateRoute` component to ensure authentication.
+ *
+ * @component
+ * @returns {JSX.Element} A React component that renders the main application structure.
+ */
 function App() {
   return (
       <Router>

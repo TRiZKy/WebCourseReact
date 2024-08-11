@@ -1,6 +1,13 @@
 import React from 'react';
 import SensorCard from '../components/SensorCard';
 
+/**
+ * A component that displays various analytics using different types of sensor data visualizations.
+ * The data is presented using line, bar, and pie charts within `SensorCard` components.
+ *
+ * @component
+ * @returns {JSX.Element} A React component that renders the analytics page with sensor data visualizations.
+ */
 const Analytics = () => {
     const sensorData = [
         {
