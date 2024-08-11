@@ -53,7 +53,7 @@ AgriPlatform is built using a modern technology stack to ensure reliability, sca
 
 3. **Real-time Monitoring**: The platform fetches data from connected sensors, allowing users to monitor their fields in real-time.
 
-4. **Crop Management**: Users can update their growth stages, and log notes, ensuring that all critical crop information is stored and accessible.
+4. **Crop Management**: Users can add/delete their crops, update their growth stages, and log notes, ensuring that all critical crop information is stored and accessible.
 
 5. **Data Visualization**: Sensor data is presented in a user-friendly format, making it easy to spot trends and make data-driven decisions.
 
