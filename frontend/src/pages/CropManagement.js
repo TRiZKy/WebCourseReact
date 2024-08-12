@@ -63,6 +63,7 @@ const CropManagement = () => {
             });
             setValidationError(''); // Clear validation error
             setIsModalOpen(false); // Close the modal after adding the crop
+            setError(null); // Clear any previous error
         } catch (err) {
             setError(err.message);
         }
@@ -78,6 +79,7 @@ const CropManagement = () => {
         try {
             const updatedCrop = await addNote(cropId, { text: noteText });
             setCrops(crops.map(crop => crop._id === cropId ? updatedCrop : crop));
+            setError(null); // Clear any previous error
         } catch (err) {
             setError(err.message);
         }
@@ -92,6 +94,7 @@ const CropManagement = () => {
         try {
             await deleteCrop(cropId);
             setCrops(crops.filter(crop => crop._id !== cropId));
+            setError(null); // Clear any previous error
         } catch (err) {
             setError(err.message);
         }

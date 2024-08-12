@@ -92,7 +92,7 @@ export const addCrop = async (crop) => {
  * @throws Will throw an error if the request fails or if the user is not authenticated.
  */
 export const addNote = async (cropId, note) => {
-  const token = await getAuthToken();  // Get the token
+  const token = await getAuthToken();
 
   if (!token) {
     throw new Error('User not authenticated');
@@ -102,7 +102,7 @@ export const addNote = async (cropId, note) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`  // Pass the token in the header
+      'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify(note),
   });
