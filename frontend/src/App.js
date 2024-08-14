@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
@@ -22,28 +22,6 @@ import Home from "./pages/Home";
  * @returns {JSX.Element} A React component that renders the main application structure.
  */
 function App() {
-  useEffect(() => {
-    const adjustHeight = () => {
-      document.documentElement.style.height = "99.9%";
-
-      // Use requestAnimationFrame to change it back to 100% as fast as possible
-      requestAnimationFrame(() => {
-        document.documentElement.style.height = "100%";
-      });
-    };
-
-    // Execute the height adjustment on DOMContentLoaded
-    if (document.readyState === 'loading') { // Loading hasn't finished yet
-      document.addEventListener('DOMContentLoaded', adjustHeight);
-    } else { // `DOMContentLoaded` has already fired
-      adjustHeight();
-    }
-
-    // Clean up the event listener if necessary
-    return () => {
-      document.removeEventListener('DOMContentLoaded', adjustHeight);
-    };
-  }, []);
   return (
       <Router>
         <AuthProvider>
