@@ -56,7 +56,7 @@
 
       // Listen for messages from the parent page
       const sendHeightToParent = () => {
-        const height = window.innerHeight;
+        const height = document.body.scrollHeight
         window.parent.postMessage({ type: 'myApp', action: 'setHeight', height }, '*')
       }
 
