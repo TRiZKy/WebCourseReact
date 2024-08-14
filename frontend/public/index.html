@@ -71,7 +71,11 @@
       const sendRequestToParent = (data) => {
         window.parent.postMessage({ type: 'myApp', action: 'privateApi', ...data }, '*')
       }
-
+      window.addEventListener('message', (event) => {
+        if (event.data === 'requestHeight') {
+          sendHeightToParent()
+        }
+      })
       // Call it immediately
       //sendHeightToParent()
       setTimeout(sendHeightToParent, 100)
