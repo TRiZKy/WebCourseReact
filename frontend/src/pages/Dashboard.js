@@ -3,21 +3,16 @@ import { fetchSensorData, getUserPreferences } from '../api/sensors';
 import SensorCard from '../components/SensorCard';
 import useDarkMode from '../hooks/useDarkMode';
 import { HashLoader } from "react-spinners";
+import {fetchCrops} from "../api/crops";
 
-/**
- * A component that displays a dashboard with sensor data visualizations.
- * It fetches the user's preferred sensors and displays their data over a selected time range.
- * The user can select the time range for viewing sensor data, and the data is filtered accordingly.
- *
- * @component
- * @returns {JSX.Element} A React component that renders the dashboard with sensor data visualizations.
- */
 const Dashboard = () => {
   const [sensorData, setSensorData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [timeRange, setTimeRange] = useState('6h'); // Default time range
+  const [crops, setCrops] = useState([]); // State to store fetched crops
+  const [selectedCrop, setSelectedCrop] = useState(''); // State for selected crop
   const isDarkMode = useDarkMode();
 
   useEffect(() => {
@@ -28,6 +23,10 @@ const Dashboard = () => {
         const data = await fetchSensorData(sensorIds);
         setSensorData(data);
         setFilteredData(filterDataByTimeRange(data, timeRange));
+
+        // Fetch crops data
+        const cropsData = await fetchCrops();
+        setCrops(cropsData);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -42,22 +41,18 @@ const Dashboard = () => {
     setFilteredData(filterDataByTimeRange(sensorData, timeRange));
   }, [timeRange, sensorData]);
 
-  /**
-   * Handles changes to the selected time range for filtering sensor data.
-   *
-   * @param {React.ChangeEvent<HTMLSelectElement>} event - The change event from the time range select element.
-   */
   const handleTimeRangeChange = (event) => {
     setTimeRange(event.target.value);
   };
 
-  /**
-   * Filters the sensor data based on the selected time range.
-   *
-   * @param {Array<Object>} data - The array of sensor data to filter.
-   * @param {string} range - The selected time range ('6h', '12h', 'day', 'week', 'month').
-   * @returns {Array<Object>} The filtered sensor data.
-   */
+  const handleCropChange = (event) => {
+    setSelectedCrop(event.target.value);
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  };
+
   const filterDataByTimeRange = (data, range) => {
     const now = Date.now();
     let startTime;
@@ -103,6 +98,7 @@ const Dashboard = () => {
   return (
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+
         <div className="mb-4">
           <label htmlFor="timeRange" className="mr-2 dark:text-gray-200">Time Range:</label>
           <select
@@ -118,13 +114,42 @@ const Dashboard = () => {
             <option value="month">Last 30 Days</option>
           </select>
         </div>
+
+        {/* Add a select tag for crop selection */}
+        <div className="mb-4">
+          <label htmlFor="cropSelect" className="mr-2 dark:text-gray-200">Select Crop:</label>
+          <select
+              id="cropSelect"
+              value={selectedCrop}
+              onChange={handleCropChange}
+              className={`p-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'}`}
+          >
+            <option value="">Select a crop</option>
+            {crops.map(crop => (
+                <option key={crop._id} value={crop._id}>
+                  {crop.name}
+                </option>
+            ))}
+          </select>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredData && filteredData.length > 0 ? (
+          {(filteredData && filteredData.length && selectedCrop && crops.length > 0)   ? (
               filteredData.map((sensor) => (
-                  <SensorCard key={sensor._id} title={sensor.name} data={sensor.readings} xLabel={sensor.xLabel} yLabel={sensor.yLabel} type="line" />
+                  <SensorCard
+                      key={sensor._id}
+                      title={sensor.name +': '+ crops.find(crop => crop._id === selectedCrop)?.name || 'No Crop Selected'}
+                      data={sensor.readings}
+                      xLabel={sensor.xLabel}
+                      yLabel={sensor.yLabel}
+                      type="line"
+                  />
               ))
-          ) : (
-              <div>Please Select Sensors To Be Shown Here</div>
+          ) : (filteredData.length === 0) ? (
+              <div>Please Select Sensors to be shown</div>
+          ) : (crops.length === 0) ?
+              <div>Please Add Crops to be shown</div> : (
+              <div>Please Select a Crop to be shown</div>
           )}
         </div>
       </div>
