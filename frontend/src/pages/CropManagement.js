@@ -1,14 +1,9 @@
+// /pages/CropManagement.js
 import React, { useState, useEffect } from 'react';
 import { fetchCrops, addCrop, addNote, deleteCrop } from '../api/crops';
 import CropCard from '../components/CropCard';
 import Modal from '../components/Modal';
 
-/**
- * Component for managing crops, including viewing, adding, and deleting crops.
- *
- * @component
- * @returns {JSX.Element} The rendered component.
- */
 const CropManagement = () => {
     const [crops, setCrops] = useState([]);
     const [error, setError] = useState(null);
@@ -21,10 +16,8 @@ const CropManagement = () => {
         expectedHarvestDate: '',
         notes: [],
     });
+    const [imageFile, setImageFile] = useState(null); // State to store the selected image file
 
-    /**
-     * Fetches crops on component mount and sets them to the state.
-     */
     useEffect(() => {
         const getCrops = async () => {
             try {
@@ -37,9 +30,6 @@ const CropManagement = () => {
         getCrops();
     }, []);
 
-    /**
-     * Handles adding a new crop after validating the input fields.
-     */
     const handleAddCrop = async () => {
         if (!newCrop.name || !newCrop.plantingDate || !newCrop.growthStage || !newCrop.expectedHarvestDate) {
             setValidationError('All fields are required.');
@@ -52,7 +42,7 @@ const CropManagement = () => {
                 notes: newCrop.notes.map(noteText => ({ text: noteText })),
             };
 
-            const addedCrop = await addCrop(cropToAdd);
+            const addedCrop = await addCrop(cropToAdd, imageFile); // Pass the image file to the API
             setCrops([...crops, addedCrop]);
             setNewCrop({
                 name: '',
@@ -61,40 +51,30 @@ const CropManagement = () => {
                 expectedHarvestDate: '',
                 notes: [],
             });
-            setValidationError(''); // Clear validation error
-            setIsModalOpen(false); // Close the modal after adding the crop
-            setError(null); // Clear any previous error
+            setImageFile(null); // Clear the selected image file
+            setValidationError('');
+            setIsModalOpen(false);
+            setError(null);
         } catch (err) {
             setError(err.message);
         }
     };
 
-    /**
-     * Handles adding a note to a specific crop.
-     *
-     * @param {string} cropId - The ID of the crop to which the note will be added.
-     * @param {string} noteText - The text of the note to add.
-     */
     const handleAddNote = async (cropId, noteText) => {
         try {
             const updatedCrop = await addNote(cropId, { text: noteText });
             setCrops(crops.map(crop => crop._id === cropId ? updatedCrop : crop));
-            setError(null); // Clear any previous error
+            setError(null);
         } catch (err) {
             setError(err.message);
         }
     };
 
-    /**
-     * Handles deleting a specific crop.
-     *
-     * @param {string} cropId - The ID of the crop to delete.
-     */
     const handleDeleteCrop = async (cropId) => {
         try {
             await deleteCrop(cropId);
             setCrops(crops.filter(crop => crop._id !== cropId));
-            setError(null); // Clear any previous error
+            setError(null);
         } catch (err) {
             setError(err.message);
         }
@@ -157,6 +137,12 @@ const CropManagement = () => {
                             placeholder="Add notes (separate multiple notes with commas)"
                             value={newCrop.notes.join(', ')}
                             onChange={(e) => setNewCrop({ ...newCrop, notes: e.target.value.split(',').map(note => note.trim()) })}
+                            className="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                        />
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setImageFile(e.target.files[0])} // Handle file selection
                             className="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                         />
                     </div>

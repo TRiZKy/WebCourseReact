@@ -28,19 +28,19 @@ export const getCrops = async (req, res) => {
  * @returns {Promise<void>} A promise that resolves when the crop has been successfully created and saved to the database.
  */
 export const addCrop = async (req, res) => {
-    // Use the correct field name from the decoded token
-    const userId = req.user._id || req.user.uid; // Check both _id and uid
+    const userId = req.user._id || req.user.uid;
 
     const crop = new Crop({
         name: req.body.name,
         plantingDate: req.body.plantingDate,
         growthStage: req.body.growthStage,
         expectedHarvestDate: req.body.expectedHarvestDate,
+        image: req.file ? req.file.buffer : null,  // Save the image as a Buffer
         notes: req.body.notes.map(note => ({
             text: note.text,
             date: note.date || Date.now(),
         })),
-        userId: userId  // Use the userId variable
+        userId: userId
     });
 
     try {
@@ -101,6 +101,19 @@ export const deleteCrop = async (req, res) => {
             return res.status(404).json({ message: 'Crop not found' });
         }
         res.status(200).json({ message: 'Crop deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+export const getCropImage = async (req, res) => {
+    try {
+        const crop = await Crop.findById(req.params.id);
+        if (!crop || !crop.image) {
+            return res.status(404).json({ message: 'Image not found' });
+        }
+
+        res.set('Content-Type', 'image/png');  // or image/jpeg based on your images
+        res.send(crop.image);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

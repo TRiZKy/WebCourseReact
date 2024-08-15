@@ -1,18 +1,9 @@
+// /components/CropCard.js
 import React, { useState } from 'react';
 import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
-/**
- * Component to display crop details and manage notes for the crop.
- *
- * @component
- * @param {Object} props - The props passed to the component.
- * @param {Object} props.crop - The crop data object containing details and notes.
- * @param {function} props.onAddNote - Function to handle adding a new note to the crop.
- * @param {function} props.onDeleteCrop - Function to handle deleting the crop.
- * @returns {JSX.Element} The rendered component.
- */
 const CropCard = ({ crop, onAddNote, onDeleteCrop }) => {
     const [note, setNote] = useState('');
 
@@ -34,6 +25,15 @@ const CropCard = ({ crop, onAddNote, onDeleteCrop }) => {
             <p><strong>Planting Date:</strong> {moment(crop.plantingDate).format('LL')}</p>
             <p><strong>Growth Stage:</strong> {crop.growthStage}</p>
             <p><strong>Expected Harvest Date:</strong> {moment(crop.expectedHarvestDate).format('LL')}</p>
+            {crop.image && (
+                <img
+                    src={`data:image/png;base64,${btoa(
+                        String.fromCharCode(...new Uint8Array(crop.image.data))
+                    )}`} // Convert the binary data to a Base64 string
+                    alt="Crop"
+                    className="mt-4 w-full h-48 object-cover"
+                />
+            )}
             <div className="mt-4">
                 <h3 className="text-lg font-semibold mb-2">Notes Timeline</h3>
                 <div className="space-y-4">
