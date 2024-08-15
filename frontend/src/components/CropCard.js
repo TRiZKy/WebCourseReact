@@ -1,8 +1,19 @@
-// /components/CropCard.js
 import React, { useState } from 'react';
 import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+
+// Note options, similar to the ones in your CropManagement component
+const noteOptions = [
+    'Germination',
+    'Sowing',
+    'Pre-bloom',
+    'Irrigation',
+    'Fertilization',
+    'Pest Control',
+    'Weeding',
+    'Harvesting',
+];
 
 const CropCard = ({ crop, onAddNote, onDeleteCrop }) => {
     const [note, setNote] = useState('');
@@ -10,7 +21,7 @@ const CropCard = ({ crop, onAddNote, onDeleteCrop }) => {
     const handleAddNote = () => {
         if (!note) return;
         onAddNote(crop._id, note);
-        setNote('');
+        setNote(''); // Clear the selection after adding the note
     };
 
     const handleDeleteCrop = () => {
@@ -31,7 +42,7 @@ const CropCard = ({ crop, onAddNote, onDeleteCrop }) => {
                         String.fromCharCode(...new Uint8Array(crop.image.data))
                     )}`} // Convert the binary data to a Base64 string
                     alt="Crop"
-                    className="mt-4 w-full h-48 object-cover"
+                    className="mt-4 w-full h-48 object-contain" // Adjust object-fit to "contain"
                 />
             )}
             <div className="mt-4">
@@ -57,12 +68,18 @@ const CropCard = ({ crop, onAddNote, onDeleteCrop }) => {
                 </div>
             </div>
             <div className="mt-2">
-                <textarea
-                    placeholder="Add a note"
+                <select
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                />
+                >
+                    <option value="" disabled>Select a note</option>
+                    {noteOptions.map((note, index) => (
+                        <option key={index} value={note}>
+                            {note}
+                        </option>
+                    ))}
+                </select>
                 <button
                     onClick={handleAddNote}
                     className="mt-2 py-2 px-4 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition-all"
