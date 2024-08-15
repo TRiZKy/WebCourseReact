@@ -9,6 +9,7 @@ const CropManagement = () => {
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [validationError, setValidationError] = useState('');
+    const [selectedNote, setSelectedNote] = useState(''); // State for selected note from dropdown
     const [newCrop, setNewCrop] = useState({
         name: '',
         plantingDate: '',
@@ -29,6 +30,18 @@ const CropManagement = () => {
         };
         getCrops();
     }, []);
+
+    // Possible notes for dropdown
+    const noteOptions = [
+        'Germination',
+        'Sowing',
+        'Pre-bloom',
+        'Irrigation',
+        'Fertilization',
+        'Pest Control',
+        'Weeding',
+        'Harvesting',
+    ];
 
     const handleAddCrop = async () => {
         if (!newCrop.name || !newCrop.plantingDate || !newCrop.growthStage || !newCrop.expectedHarvestDate) {
@@ -133,12 +146,19 @@ const CropManagement = () => {
                             onChange={(e) => setNewCrop({ ...newCrop, expectedHarvestDate: e.target.value })}
                             className="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                         />
-                        <textarea
-                            placeholder="Add notes (separate multiple notes with commas)"
-                            value={newCrop.notes.join(', ')}
-                            onChange={(e) => setNewCrop({ ...newCrop, notes: e.target.value.split(',').map(note => note.trim()) })}
+                        <select
+                            value={selectedNote} // ערך ההערה הנבחרת
+                            onChange={(e) => setNewCrop({ ...newCrop, notes: e.target.value.split(',').map(note => note.trim()) })} // שינוי הערך בהתאם לבחירת המשתמש
                             className="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                        />
+                        >
+                            <option value="" disabled>Select a note</option>
+                            {/* אפשרות ריקה להנחיית המשתמש */}
+                            {noteOptions.map((note, index) => (
+                                <option key={index} value={note}>
+                                    {note}
+                                </option>
+                            ))}
+                        </select>
                         <input
                             type="file"
                             accept="image/*"
