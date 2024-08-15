@@ -92,7 +92,11 @@ const CropManagement = () => {
             setError(err.message);
         }
     };
-
+    const handleNoteChange = (e) => {
+        const note = e.target.value;
+        setSelectedNote(note);
+        setNewCrop({ ...newCrop, notes: [...newCrop.notes, note] }); // Add the selected note to the notes array
+    };
     return (
         <div className="container mx-auto p-4 dark:bg-gray-900 dark:text-gray-100">
             <h1 className="text-3xl font-bold mb-6 text-center">Crop Management</h1>
@@ -148,7 +152,7 @@ const CropManagement = () => {
                         />
                         <select
                             value={selectedNote} // ערך ההערה הנבחרת
-                            onChange={(e) => setNewCrop({ ...newCrop, notes: e.target.value.split(',').map(note => note.trim()) })} // שינוי הערך בהתאם לבחירת המשתמש
+                            onChange={handleNoteChange} // שינוי הערך בהתאם לבחירת המשתמש
                             className="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                         >
                             <option value="" disabled>Select a note</option>
