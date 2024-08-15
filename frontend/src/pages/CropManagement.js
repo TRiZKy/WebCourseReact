@@ -17,7 +17,7 @@ const CropManagement = () => {
         expectedHarvestDate: '',
         notes: [],
     });
-    const [imageFile, setImageFile] = useState(null); // State to store the selected image file
+    const [imageFile, setImageFile] = useState(null); // State to store the resized image file
 
     useEffect(() => {
         const getCrops = async () => {
@@ -55,7 +55,7 @@ const CropManagement = () => {
                 notes: newCrop.notes.map(noteText => ({ text: noteText })),
             };
 
-            const addedCrop = await addCrop(cropToAdd, imageFile); // Pass the image file to the API
+            const addedCrop = await addCrop(cropToAdd, imageFile); // Pass the resized image file to the API
             setCrops([...crops, addedCrop]);
             setNewCrop({
                 name: '',
@@ -92,11 +92,37 @@ const CropManagement = () => {
             setError(err.message);
         }
     };
+
     const handleNoteChange = (e) => {
         const note = e.target.value;
         setSelectedNote(note);
         setNewCrop({ ...newCrop, notes: [...newCrop.notes, note] }); // Add the selected note to the notes array
     };
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const aspectRatio = img.width / img.height;
+                    canvas.height = 192; // Fixed height
+                    canvas.width = 192 * aspectRatio; // Adjust width to maintain aspect ratio
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    canvas.toBlob((blob) => {
+                        const resizedFile = new File([blob], file.name, { type: file.type });
+                        setImageFile(resizedFile);
+                    }, file.type);
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     return (
         <div className="container mx-auto p-4 dark:bg-gray-900 dark:text-gray-100">
             <h1 className="text-3xl font-bold mb-6 text-center">Crop Management</h1>
@@ -187,7 +213,7 @@ const CropManagement = () => {
                             <input
                                 type="file"
                                 accept="image/*"
-                                onChange={(e) => setImageFile(e.target.files[0])}
+                                onChange={handleImageUpload}
                                 className="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                             />
                         </div>
