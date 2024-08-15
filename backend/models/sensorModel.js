@@ -19,12 +19,16 @@ const ReadingSchema = new mongoose.Schema({
  * @property {String} name - The name of the sensor. This field is required.
  * @property {String} type - The type of the sensor (e.g., 'temperature', 'humidity'). This field is required.
  * @property {String} location - The location where the sensor is placed. This field is required.
+ * @property {String} xLabel - The label for the x-axis (e.g., 'Time'). This field is required.
+ * @property {String} yLabel - The label for the y-axis (e.g., 'Temperature'). This field is required.
  * @property {Reading[]} readings - An array of readings associated with the sensor.
  */
 const SensorSchema = new mongoose.Schema({
     name: { type: String, required: true },
     type: { type: String, required: true },
     location: { type: String, required: true },
+    xLabel: { type: String, required: true },
+    yLabel: { type: String, required: true },
     readings: [ReadingSchema],
 });
 

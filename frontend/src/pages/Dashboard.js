@@ -121,7 +121,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredData && filteredData.length > 0 ? (
               filteredData.map((sensor) => (
-                  <SensorCard key={sensor._id} title={sensor.name} data={sensor.readings} type="line" />
+                  <SensorCard key={sensor._id} title={sensor.name} data={sensor.readings} xLabel={sensor.xLabel} yLabel={sensor.yLabel} type="line" />
               ))
           ) : (
               <div>Please Select Sensors To Be Shown Here</div>
