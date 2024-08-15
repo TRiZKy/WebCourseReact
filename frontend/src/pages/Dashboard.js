@@ -3,14 +3,13 @@ import { fetchSensorData, getUserPreferences } from '../api/sensors';
 import SensorCard from '../components/SensorCard';
 import useDarkMode from '../hooks/useDarkMode';
 import { HashLoader } from "react-spinners";
-import {fetchCrops} from "../api/crops";
+import { fetchCrops } from "../api/crops";
 
 const Dashboard = () => {
   const [sensorData, setSensorData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [timeRange, setTimeRange] = useState('6h'); // Default time range
+  const [timeRange, setTimeRange] = useState({}); // Per-sensor time range
   const [crops, setCrops] = useState([]); // State to store fetched crops
   const [selectedCrop, setSelectedCrop] = useState(''); // State for selected crop
   const isDarkMode = useDarkMode();
@@ -22,11 +21,17 @@ const Dashboard = () => {
         const sensorIds = userPreferences.map(sensor => sensor._id);
         const data = await fetchSensorData(sensorIds);
         setSensorData(data);
-        setFilteredData(filterDataByTimeRange(data, timeRange));
 
         // Fetch crops data
         const cropsData = await fetchCrops();
         setCrops(cropsData);
+
+        // Initialize timeRange with default values for each sensor
+        const initialTimeRange = {};
+        data.forEach(sensor => {
+          initialTimeRange[sensor._id] = '6h'; // Default time range
+        });
+        setTimeRange(initialTimeRange);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -37,12 +42,11 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    setFilteredData(filterDataByTimeRange(sensorData, timeRange));
-  }, [timeRange, sensorData]);
-
-  const handleTimeRangeChange = (event) => {
-    setTimeRange(event.target.value);
+  const handleTimeRangeChange = (sensorId, event) => {
+    setTimeRange({
+      ...timeRange,
+      [sensorId]: event.target.value,
+    });
   };
 
   const handleCropChange = (event) => {
@@ -53,7 +57,7 @@ const Dashboard = () => {
     }, 1000);
   };
 
-  const filterDataByTimeRange = (data, range) => {
+  const filterDataByTimeRange = (sensor, range) => {
     const now = Date.now();
     let startTime;
 
@@ -77,10 +81,7 @@ const Dashboard = () => {
         startTime = now - 6 * 60 * 60 * 1000;
     }
 
-    return data.map(sensor => ({
-      ...sensor,
-      readings: sensor.readings.filter(reading => new Date(reading.time).getTime() >= startTime)
-    }));
+    return sensor.readings.filter(reading => new Date(reading.time).getTime() >= startTime);
   };
 
   if (loading) {
@@ -98,22 +99,6 @@ const Dashboard = () => {
   return (
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-
-        <div className="mb-4">
-          <label htmlFor="timeRange" className="mr-2 dark:text-gray-200">Time Range:</label>
-          <select
-              id="timeRange"
-              value={timeRange}
-              onChange={handleTimeRangeChange}
-              className={`p-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'}`}
-          >
-            <option value="6h">Last 6 Hours</option>
-            <option value="12h">Last 12 Hours</option>
-            <option value="day">Last 24 Hours</option>
-            <option value="week">Last 7 Days</option>
-            <option value="month">Last 30 Days</option>
-          </select>
-        </div>
 
         {/* Add a select tag for crop selection */}
         <div className="mb-4">
@@ -134,22 +119,40 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {(filteredData && filteredData.length && selectedCrop && crops.length > 0)   ? (
-              filteredData.map((sensor) => (
-                  <SensorCard
-                      key={sensor._id}
-                      title={sensor.name +': '+ crops.find(crop => crop._id === selectedCrop)?.name || 'No Crop Selected'}
-                      data={sensor.readings}
-                      xLabel={sensor.xLabel}
-                      yLabel={sensor.yLabel}
-                      type="line"
-                  />
+          {sensorData.length && selectedCrop && crops.length > 0 ? (
+              sensorData.map(sensor => (
+                  <div key={sensor._id}>
+                    <div className="mb-4">
+                      <label htmlFor={`timeRange-${sensor._id}`} className="mr-2 dark:text-gray-200">Time Range:</label>
+                      <select
+                          id={`timeRange-${sensor._id}`}
+                          value={timeRange[sensor._id]}
+                          onChange={e => handleTimeRangeChange(sensor._id, e)}
+                          className={`p-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'}`}
+                      >
+                        <option value="6h">Last 6 Hours</option>
+                        <option value="12h">Last 12 Hours</option>
+                        <option value="day">Last 24 Hours</option>
+                        <option value="week">Last 7 Days</option>
+                        <option value="month">Last 30 Days</option>
+                      </select>
+                    </div>
+
+                    <SensorCard
+                        title={sensor.name + ': ' + crops.find(crop => crop._id === selectedCrop)?.name || 'No Crop Selected'}
+                        data={filterDataByTimeRange(sensor, timeRange[sensor._id])}
+                        xLabel={sensor.xLabel}
+                        yLabel={sensor.yLabel}
+                        type="line"
+                    />
+                  </div>
               ))
-          ) : (filteredData.length === 0) ? (
-              <div>Please Select Sensors to be shown</div>
-          ) : (crops.length === 0) ?
-              <div>Please Add Crops to be shown</div> : (
-              <div>Please Select a Crop to be shown</div>
+          ) : (
+              crops.length === 0 ? (
+                  <div>Please Add Crops to be shown</div>
+              ) : (
+                  <div>Please Select a Crop to be shown</div>
+              )
           )}
         </div>
       </div>
