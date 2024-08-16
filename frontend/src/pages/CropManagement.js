@@ -1,4 +1,3 @@
-// /pages/CropManagement.js
 import React, { useState, useEffect } from 'react';
 import { fetchCrops, addCrop, addNote, deleteCrop } from '../api/crops';
 import CropCard from '../components/CropCard';
@@ -9,7 +8,7 @@ const CropManagement = () => {
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [validationError, setValidationError] = useState('');
-    const [selectedNote, setSelectedNote] = useState(''); // State for selected note from dropdown
+    const [selectedNote, setSelectedNote] = useState('');
     const [newCrop, setNewCrop] = useState({
         name: '',
         plantingDate: '',
@@ -17,7 +16,7 @@ const CropManagement = () => {
         expectedHarvestDate: '',
         notes: [],
     });
-    const [imageFile, setImageFile] = useState(null); // State to store the resized image file
+    const [imageFile, setImageFile] = useState(null);
 
     useEffect(() => {
         const getCrops = async () => {
@@ -31,7 +30,6 @@ const CropManagement = () => {
         getCrops();
     }, []);
 
-    // Possible notes for dropdown
     const noteOptions = [
         'Germination',
         'Sowing',
@@ -55,7 +53,7 @@ const CropManagement = () => {
                 notes: newCrop.notes.map(noteText => ({ text: noteText })),
             };
 
-            const addedCrop = await addCrop(cropToAdd, imageFile); // Pass the resized image file to the API
+            const addedCrop = await addCrop(cropToAdd, imageFile);
             setCrops([...crops, addedCrop]);
             setNewCrop({
                 name: '',
@@ -64,7 +62,7 @@ const CropManagement = () => {
                 expectedHarvestDate: '',
                 notes: [],
             });
-            setImageFile(null); // Clear the selected image file
+            setImageFile(null);
             setValidationError('');
             setIsModalOpen(false);
             setError(null);
@@ -96,7 +94,7 @@ const CropManagement = () => {
     const handleNoteChange = (e) => {
         const note = e.target.value;
         setSelectedNote(note);
-        setNewCrop({ ...newCrop, notes: [...newCrop.notes, note] }); // Add the selected note to the notes array
+        setNewCrop({ ...newCrop, notes: [...newCrop.notes, note] });
     };
 
     const handleImageUpload = (e) => {
@@ -109,8 +107,8 @@ const CropManagement = () => {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
                     const aspectRatio = img.width / img.height;
-                    canvas.height = 192; // Fixed height
-                    canvas.width = 192 * aspectRatio; // Adjust width to maintain aspect ratio
+                    canvas.height = 192;
+                    canvas.width = 192 * aspectRatio;
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     canvas.toBlob((blob) => {
                         const resizedFile = new File([blob], file.name, { type: file.type });
@@ -124,14 +122,14 @@ const CropManagement = () => {
     };
 
     return (
-        <div className="container mx-auto p-4 dark:bg-gray-900 dark:text-gray-100">
-            <h1 className="text-3xl font-bold mb-6 text-center">Crop Management</h1>
-            {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        <div className="container mx-auto p-6 h-full dark:bg-gray-900 dark:text-gray-100">
+            <h1 className="text-4xl font-extrabold text-center mb-8">Crop Management</h1>
+            {error && <p className="text-red-600 text-center mb-6">{error}</p>}
 
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-8">
                 <button
                     onClick={() => setIsModalOpen(true)}
-                    className="py-2 px-6 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition-all"
+                    className="py-3 px-8 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-transform transform hover:scale-105"
                 >
                     Add New Crop
                 </button>
@@ -145,59 +143,59 @@ const CropManagement = () => {
 
             {isModalOpen && (
                 <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                    <h2 className="text-2xl font-bold mb-4">Add a New Crop</h2>
+                    <h2 className="text-3xl font-semibold mb-6">Add a New Crop</h2>
                     {validationError && <p className="text-red-500 mb-4">{validationError}</p>}
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 gap-6">
                         <div>
-                            <label className="block mb-1 dark:text-gray-200">Crop Name</label>
+                            <label className="block mb-2 dark:text-gray-200">Crop Name</label>
                             <input
                                 type="text"
                                 placeholder="Enter crop name"
                                 value={newCrop.name}
                                 onChange={(e) => setNewCrop({...newCrop, name: e.target.value})}
-                                className="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                                className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
                             />
                         </div>
 
                         <div>
-                            <label className="block mb-1 dark:text-gray-200">Planting Date</label>
+                            <label className="block mb-2 dark:text-gray-200">Planting Date</label>
                             <span className="block text-sm text-gray-500 dark:text-gray-400 mb-1">The day of planting the crop</span>
                             <input
                                 type="date"
                                 value={newCrop.plantingDate}
                                 onChange={(e) => setNewCrop({...newCrop, plantingDate: e.target.value})}
-                                className="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                                className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
                             />
                         </div>
 
                         <div>
-                            <label className="block mb-1 dark:text-gray-200">Growth Stage</label>
+                            <label className="block mb-2 dark:text-gray-200">Growth Stage</label>
                             <input
                                 type="text"
                                 placeholder="Enter growth stage"
                                 value={newCrop.growthStage}
                                 onChange={(e) => setNewCrop({...newCrop, growthStage: e.target.value})}
-                                className="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                                className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
                             />
                         </div>
 
                         <div>
-                            <label className="block mb-1 dark:text-gray-200">Expected Harvest Date</label>
+                            <label className="block mb-2 dark:text-gray-200">Expected Harvest Date</label>
                             <span className="block text-sm text-gray-500 dark:text-gray-400 mb-1">The day of expected harvest of the plant</span>
                             <input
                                 type="date"
                                 value={newCrop.expectedHarvestDate}
                                 onChange={(e) => setNewCrop({...newCrop, expectedHarvestDate: e.target.value})}
-                                className="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                                className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
                             />
                         </div>
 
                         <div>
-                            <label className="block mb-1 dark:text-gray-200">Add Note</label>
+                            <label className="block mb-2 dark:text-gray-200">Add Note</label>
                             <select
                                 value={selectedNote}
                                 onChange={handleNoteChange}
-                                className="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                                className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
                             >
                                 <option value="" disabled>Select a note</option>
                                 {noteOptions.map((note, index) => (
@@ -209,19 +207,19 @@ const CropManagement = () => {
                         </div>
 
                         <div>
-                            <label className="block mb-1 dark:text-gray-200">Upload Image</label>
+                            <label className="block mb-2 dark:text-gray-200">Upload Image</label>
                             <input
                                 type="file"
                                 accept="image/*"
                                 onChange={handleImageUpload}
-                                className="p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                                className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
                             />
                         </div>
                     </div>
-                    <div className="flex justify-end mt-6">
+                    <div className="flex justify-end mt-8">
                         <button
                             onClick={handleAddCrop}
-                            className="py-2 px-6 bg-green-600 text-white rounded-lg shadow-lg hover:bg-green-700 transition-all"
+                            className="py-3 px-8 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition-transform transform hover:scale-105"
                         >
                             Save Crop
                         </button>

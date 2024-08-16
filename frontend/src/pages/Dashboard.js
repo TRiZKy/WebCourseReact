@@ -87,27 +87,31 @@ const Dashboard = () => {
   if (loading) {
     return (
         <div className="flex items-center justify-center h-full">
-          <HashLoader color="#0bae12" size={200} />
+          <HashLoader color={isDarkMode ? "#ffffff" : "#0bae12"} size={200} />
         </div>
     );
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+        <div className="flex items-center justify-center h-full text-red-600">
+          <p>Error: {error}</p>
+        </div>
+    );
   }
 
   return (
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      <div className="container mx-auto p-6 h-full">
+        <h1 className="text-3xl font-extrabold text-center mb-6 text-gray-900 dark:text-white">Dashboard</h1>
 
-        {/* Add a select tag for crop selection */}
-        <div className="mb-4">
-          <label htmlFor="cropSelect" className="mr-2 dark:text-gray-200">Select Crop:</label>
+        {/* Crop Selection */}
+        <div className="flex justify-center mb-6">
+          <label htmlFor="cropSelect" className="mr-2 font-medium text-gray-900 dark:text-gray-200">Select Crop:</label>
           <select
               id="cropSelect"
               value={selectedCrop}
               onChange={handleCropChange}
-              className={`p-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'}`}
+              className="p-2 border rounded-lg bg-white text-black dark:bg-gray-800 dark:text-white"
           >
             <option value="">Select a crop</option>
             {crops.map(crop => (
@@ -118,17 +122,17 @@ const Dashboard = () => {
           </select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {sensorData.length && selectedCrop && crops.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {sensorData.length > 0 && selectedCrop && crops.length > 0 ? (
               sensorData.map(sensor => (
-                  <div key={sensor._id}>
+                  <div key={sensor._id} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4">
                     <div className="mb-4">
-                      <label htmlFor={`timeRange-${sensor._id}`} className="mr-2 dark:text-gray-200">Time Range:</label>
+                      <label htmlFor={`timeRange-${sensor._id}`} className="block mb-2 font-medium text-gray-900 dark:text-gray-200">Time Range:</label>
                       <select
                           id={`timeRange-${sensor._id}`}
                           value={timeRange[sensor._id]}
                           onChange={e => handleTimeRangeChange(sensor._id, e)}
-                          className={`p-2 border rounded ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'}`}
+                          className="p-2 border rounded-lg w-full bg-white text-black dark:bg-gray-700 dark:text-white"
                       >
                         <option value="6h">Last 6 Hours</option>
                         <option value="12h">Last 12 Hours</option>
@@ -139,7 +143,7 @@ const Dashboard = () => {
                     </div>
 
                     <SensorCard
-                        title={sensor.name + ': ' + crops.find(crop => crop._id === selectedCrop)?.name || 'No Crop Selected'}
+                        title={`${sensor.name}: ${crops.find(crop => crop._id === selectedCrop)?.name || 'No Crop Selected'}`}
                         data={filterDataByTimeRange(sensor, timeRange[sensor._id])}
                         xLabel={sensor.xLabel}
                         yLabel={sensor.yLabel}
@@ -148,11 +152,9 @@ const Dashboard = () => {
                   </div>
               ))
           ) : (
-              crops.length === 0 ? (
-                  <div>Please Add Crops to be shown</div>
-              ) : (
-                  <div>Please Select a Crop to be shown</div>
-              )
+              <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center font-semibold text-lg text-gray-900 dark:text-gray-200">
+                {crops.length === 0 ? "Please Add Crops to be shown" : sensorData.length === 0 ? "Please Select Sensors to be shown" : "Please Select a Crop to be shown"}
+              </div>
           )}
         </div>
       </div>

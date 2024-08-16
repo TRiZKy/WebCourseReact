@@ -113,7 +113,7 @@ const SensorCard = ({ title, data, type, xLabel, yLabel }) => {
     };
 
     return (
-        <div className="max-w-sm rounded overflow-hidden shadow-lg p-4 m-4 bg-white dark:bg-gray-800">
+        <div className="rounded overflow-hidden shadow-lg p-4 m-4 bg-white dark:bg-gray-800">
             <div className="font-bold text-xl mb-2 dark:text-gray-200">{title}</div>
             {renderChart()}
         </div>

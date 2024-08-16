@@ -36,8 +36,6 @@ const Navbar = () => {
           <Link to="/home" className="text-white text-xl font-bold dark:text-gray-200">AgriPlatform</Link>
           <div className="hidden md:flex space-x-4 items-center">
             <Link to="/" className="text-white dark:text-gray-200">Dashboard</Link>
-            <Link to="/analytics" className="text-white dark:text-gray-200">Analytics</Link>
-            <Link to="/sensors" className="text-white dark:text-gray-200">Sensors</Link>
             <Link to="/crops" className="text-white dark:text-gray-200">Crops</Link>
             <Link to="/sensor-selection" className="text-white dark:text-gray-200">Sensor Selection</Link>
             <DarkModeToggleComponent />

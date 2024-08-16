@@ -38,8 +38,6 @@ const BurgerMenu = () => {
         <Menu right>
             <Link to="/home" className="menu-item">Home</Link>
             <Link to="/" className="menu-item">Dashboard</Link>
-            <Link to="/analytics" className="menu-item">Analytics</Link>
-            <Link to="/sensors" className="menu-item">Sensors</Link>
             <Link to="/crops" className="menu-item">Crops</Link>
             <Link to="/sensor-selection" className="menu-item">Sensor Selection</Link>
             {currentUser ? (
