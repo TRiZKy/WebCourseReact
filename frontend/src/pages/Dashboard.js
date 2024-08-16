@@ -106,7 +106,7 @@ const Dashboard = () => {
 
         {/* Crop Selection */}
         <div className="flex justify-center mb-6">
-          <label htmlFor="cropSelect" className="mr-2 font-medium text-gray-900 dark:text-gray-200">Select Crop:</label>
+          <label htmlFor="cropSelect" className="mr-2 font-medium text-gray-900 dark:text-gray-200 content-center">Select Crop:</label>
           <select
               id="cropSelect"
               value={selectedCrop}
@@ -122,12 +122,14 @@ const Dashboard = () => {
           </select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="flex flex-wrap justify-center gap-8">
           {sensorData.length > 0 && selectedCrop && crops.length > 0 ? (
               sensorData.map(sensor => (
-                  <div key={sensor._id} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4">
+                  <div key={sensor._id} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4"
+                       style={{flex: "1 0 400px"}}>
                     <div className="mb-4">
-                      <label htmlFor={`timeRange-${sensor._id}`} className="block mb-2 font-medium text-gray-900 dark:text-gray-200">Time Range:</label>
+                      <label htmlFor={`timeRange-${sensor._id}`}
+                             className="block mb-2 font-medium text-gray-900 dark:text-gray-200">Time Range:</label>
                       <select
                           id={`timeRange-${sensor._id}`}
                           value={timeRange[sensor._id]}
@@ -152,7 +154,7 @@ const Dashboard = () => {
                   </div>
               ))
           ) : (
-              <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center font-semibold text-lg text-gray-900 dark:text-gray-200">
+              <div className="flex-grow text-center font-semibold text-lg text-gray-900 dark:text-gray-200">
                 {crops.length === 0 ? "Please Add Crops to be shown" : sensorData.length === 0 ? "Please Select Sensors to be shown" : "Please Select a Crop to be shown"}
               </div>
           )}
