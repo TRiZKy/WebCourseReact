@@ -127,7 +127,7 @@ const Dashboard = () => {
               sensorData.map(sensor => (
                   <div key={sensor._id} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4"
                        style={{flex: "1 0 400px"}}>
-                    <div className="mb-4">
+                    <div className="m-4">
                       <label htmlFor={`timeRange-${sensor._id}`}
                              className="block mb-2 font-medium text-gray-900 dark:text-gray-200">Time Range:</label>
                       <select
