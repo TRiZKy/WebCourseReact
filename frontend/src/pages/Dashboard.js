@@ -5,6 +5,12 @@ import useDarkMode from '../hooks/useDarkMode';
 import { HashLoader } from "react-spinners";
 import { fetchCrops } from "../api/crops";
 
+/**
+ * Dashboard component for displaying sensor data and crop selection.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Dashboard component.
+ */
 const Dashboard = () => {
   const [sensorData, setSensorData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,6 +20,10 @@ const Dashboard = () => {
   const [selectedCrop, setSelectedCrop] = useState(''); // State for selected crop
   const isDarkMode = useDarkMode();
 
+  /**
+   * Fetches user preferences and sensor data, as well as crop data on component mount.
+   * Initializes the time range for each sensor.
+   */
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,6 +52,12 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
+  /**
+   * Handles the change of time range for a specific sensor.
+   *
+   * @param {string} sensorId - The ID of the sensor whose time range is being changed.
+   * @param {Object} event - The event object representing the change in time range.
+   */
   const handleTimeRangeChange = (sensorId, event) => {
     setTimeRange({
       ...timeRange,
@@ -49,6 +65,11 @@ const Dashboard = () => {
     });
   };
 
+  /**
+   * Handles the change of selected crop.
+   *
+   * @param {Object} event - The event object representing the change in selected crop.
+   */
   const handleCropChange = (event) => {
     setSelectedCrop(event.target.value);
     setLoading(true);
@@ -57,6 +78,13 @@ const Dashboard = () => {
     }, 1000);
   };
 
+  /**
+   * Filters sensor data by the selected time range.
+   *
+   * @param {Object} sensor - The sensor data to filter.
+   * @param {string} range - The selected time range.
+   * @returns {Array<Object>} The filtered sensor data.
+   */
   const filterDataByTimeRange = (sensor, range) => {
     const now = Date.now();
     let startTime;

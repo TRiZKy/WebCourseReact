@@ -105,6 +105,16 @@ export const deleteCrop = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+/**
+ * Retrieves and sends the image associated with a specific crop.
+ *
+ * @async
+ * @function
+ * @param {Object} req - Express request object.
+ * @param {string} req.params.id - The ID of the crop whose image is to be retrieved.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} Sends the image as a response or a 404/500 status with an error message.
+ */
 export const getCropImage = async (req, res) => {
     try {
         const crop = await Crop.findById(req.params.id);

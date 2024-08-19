@@ -14,15 +14,43 @@ const noteOptions = [
     'Harvesting',
 ];
 
+/**
+ * Component representing a card for displaying crop details, adding notes, and deleting the crop.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.crop - The crop data.
+ * @param {string} props.crop._id - The unique identifier of the crop.
+ * @param {string} props.crop.name - The name of the crop.
+ * @param {string} props.crop.plantingDate - The planting date of the crop.
+ * @param {string} props.crop.growthStage - The growth stage of the crop.
+ * @param {string} props.crop.expectedHarvestDate - The expected harvest date of the crop.
+ * @param {Array<Object>} props.crop.notes - The notes associated with the crop.
+ * @param {string} props.crop.notes[].text - The text of a note.
+ * @param {Date} props.crop.notes[].date - The date of the note.
+ * @param {Object} [props.crop.image] - The image data of the crop.
+ * @param {Uint8Array} [props.crop.image.data] - The binary data of the image.
+ * @param {Function} props.onAddNote - Callback function to add a note to the crop.
+ * @param {Function} props.onDeleteCrop - Callback function to delete the crop.
+ * @returns {JSX.Element} The rendered crop card component.
+ */
 const CropCard = ({ crop, onAddNote, onDeleteCrop }) => {
     const [note, setNote] = useState('');
 
+    /**
+     * Handles adding a new note to the crop.
+     * If no note is selected, the function returns early.
+     */
     const handleAddNote = () => {
         if (!note) return;
         onAddNote(crop._id, note);
-        setNote(''); // Clear the selection after adding the note
+        setNote('');
     };
 
+    /**
+     * Handles the deletion of the crop.
+     * Prompts the user with a confirmation before proceeding with deletion.
+     */
     const handleDeleteCrop = () => {
         if (window.confirm('Are you sure you want to delete this crop?')) {
             onDeleteCrop(crop._id);

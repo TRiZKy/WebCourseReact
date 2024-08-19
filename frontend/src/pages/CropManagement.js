@@ -3,6 +3,12 @@ import { fetchCrops, addCrop, addNote, deleteCrop } from '../api/crops';
 import CropCard from '../components/CropCard';
 import AccordionSection from '../components/AccordionSection';
 
+/**
+ * CropManagement component for managing crops, including adding, viewing, and deleting crops, as well as adding notes to crops.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered CropManagement component.
+ */
 const CropManagement = () => {
     const [crops, setCrops] = useState([]);
     const [error, setError] = useState(null);
@@ -17,6 +23,9 @@ const CropManagement = () => {
     });
     const [imageFile, setImageFile] = useState(null);
 
+    /**
+     * Fetches the list of crops when the component mounts.
+     */
     useEffect(() => {
         const getCrops = async () => {
             try {
@@ -40,6 +49,12 @@ const CropManagement = () => {
         'Harvesting',
     ];
 
+    /**
+     * Handles adding a new crop.
+     * Validates input fields and sets validation error if any required field is missing.
+     *
+     * @async
+     */
     const handleAddCrop = async () => {
         if (!newCrop.name || !newCrop.plantingDate || !newCrop.growthStage || !newCrop.expectedHarvestDate || !selectedNote) {
             setValidationError('All fields are required.');
@@ -70,6 +85,13 @@ const CropManagement = () => {
         }
     };
 
+    /**
+     * Handles adding a note to a specific crop.
+     *
+     * @async
+     * @param {string} cropId - The ID of the crop to which the note is being added.
+     * @param {string} noteText - The text of the note to add.
+     */
     const handleAddNote = async (cropId, noteText) => {
         try {
             const updatedCrop = await addNote(cropId, { text: noteText });
@@ -80,6 +102,12 @@ const CropManagement = () => {
         }
     };
 
+    /**
+     * Handles deleting a crop.
+     *
+     * @async
+     * @param {string} cropId - The ID of the crop to delete.
+     */
     const handleDeleteCrop = async (cropId) => {
         try {
             await deleteCrop(cropId);
@@ -90,12 +118,23 @@ const CropManagement = () => {
         }
     };
 
+    /**
+     * Handles the change of the selected note for a new crop.
+     *
+     * @param {Object} e - The event object representing the change in selected note.
+     */
     const handleNoteChange = (e) => {
         const note = e.target.value;
         setSelectedNote(note);
         setNewCrop({ ...newCrop, notes: [...newCrop.notes, note] });
     };
 
+    /**
+     * Handles the image file upload and resizing.
+     * Resizes the image to a maximum of 192 pixels in height while maintaining aspect ratio.
+     *
+     * @param {Object} e - The event object representing the change in file input.
+     */
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file && file.type.startsWith('image/')) {
@@ -120,6 +159,11 @@ const CropManagement = () => {
         }
     };
 
+    /**
+     * Renders the form content for adding a new crop.
+     *
+     * @returns {JSX.Element} The rendered form content.
+     */
     const renderFormContent = () => (
         <>
             {validationError && <p className="text-red-500 mb-4">{validationError}</p>}
